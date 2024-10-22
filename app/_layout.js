@@ -1,6 +1,11 @@
 import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
+import {
+  setStatusBarBackgroundColor,
+  setStatusBarStyle,
+  StatusBar,
+} from "expo-status-bar";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -14,7 +19,6 @@ const RootLayout = () => {
 
   useEffect(() => {
     if (error) throw error;
-
     if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
@@ -28,9 +32,26 @@ const RootLayout = () => {
     return null;
   }
 
+  useEffect(() => {
+    setTimeout(() => {
+      setStatusBarStyle("light");
+      setStatusBarBackgroundColor("#6D38C3");
+    }, 0);
+  }, []);
   return (
     <Stack>
-      <Stack.Screen name="index" />
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="(tabs)"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };
