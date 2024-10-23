@@ -6,7 +6,9 @@ import {
   setStatusBarStyle,
   StatusBar,
 } from "expo-status-bar";
-
+import { Provider } from "react-redux";
+import { store } from "./store";
+import { loadFavorites } from "./store/favoritesSlice";
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
@@ -21,9 +23,14 @@ const RootLayout = () => {
     if (error) throw error;
     if (fontsLoaded) {
       SplashScreen.hideAsync();
+      setStatusBarStyle("light");
+      setStatusBarBackgroundColor("#6D38C3");
     }
   }, [fontsLoaded, error]);
-
+  // Load favorites from AsyncStorage when the layout is first loaded
+  useEffect(() => {
+    store.dispatch(loadFavorites());
+  }, []);
   if (!fontsLoaded) {
     return null;
   }
@@ -32,27 +39,23 @@ const RootLayout = () => {
     return null;
   }
 
-  useEffect(() => {
-    setTimeout(() => {
-      setStatusBarStyle("light");
-      setStatusBarBackgroundColor("#6D38C3");
-    }, 0);
-  }, []);
   return (
-    <Stack>
-      <Stack.Screen
-        name="index"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="(tabs)"
-        options={{
-          headerShown: false,
-        }}
-      />
-    </Stack>
+    <Provider store={store}>
+      <Stack>
+        <Stack.Screen
+          name="index"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Stack>
+    </Provider>
   );
 };
 
