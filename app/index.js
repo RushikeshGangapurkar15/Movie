@@ -1,12 +1,8 @@
-import { View, Text } from "react-native";
 import React from "react";
+import { Redirect } from "expo-router";
 
 const index = () => {
-  return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="font-psemibold text-orange-400">index</Text>
-    </View>
-  );
+  return <Redirect href="/Home" />;
 };
 
 export default index;

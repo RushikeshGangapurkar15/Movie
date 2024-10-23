@@ -1,7 +1,14 @@
 import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
-
+import {
+  setStatusBarBackgroundColor,
+  setStatusBarStyle,
+  StatusBar,
+} from "expo-status-bar";
+import { Provider } from "react-redux";
+import { store } from "./store";
+import { loadFavorites } from "./store/favoritesSlice";
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
@@ -14,12 +21,16 @@ const RootLayout = () => {
 
   useEffect(() => {
     if (error) throw error;
-
     if (fontsLoaded) {
       SplashScreen.hideAsync();
+      setStatusBarStyle("light");
+      setStatusBarBackgroundColor("#6D38C3");
     }
   }, [fontsLoaded, error]);
-
+  // Load favorites from AsyncStorage when the layout is first loaded
+  useEffect(() => {
+    store.dispatch(loadFavorites());
+  }, []);
   if (!fontsLoaded) {
     return null;
   }
@@ -29,9 +40,22 @@ const RootLayout = () => {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="index" />
-    </Stack>
+    <Provider store={store}>
+      <Stack>
+        <Stack.Screen
+          name="index"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Stack>
+    </Provider>
   );
 };
 
